@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -6,7 +7,7 @@ SECRET_KEY = 'django-insecure-f)!#lv8=d%)s-r@(ds-2jm4k^-t+6ic-gl8ji8g^zetb^b0kf=
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -88,10 +89,22 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+redis_host = os.environ.get('REDIS_HOST', 'localhost')    
+# Channel layer definitions
+# http://channels.readthedocs.org/en/latest/deploying.html#setting-up-a-channel-backend
+
+# Celery
+REDIS_HOST = 'redis'
+REDIS_PORT = '6379'
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_TASK_TRACK_STARTED = True
+
 
 ALLOWED_FORMATS = [
     # Image
-    'bmp', 'gif', 'ico', 'jp2', 'jpeg', 'png', 'psd', 'tiff', 'webp',
+    'bmp', 'gif', 'ico', 'jp2', 'jpeg', 'jpg', 'png', 'psd', 'tiff', 'webp',
     # Video
     '3g2', '3gp', 'asf', 'avi', 'flv', 'm4v', 'mkv', 'mov', 'mp4', 'mpg',
     'ogv', 'swf', 'vob', 'webm', 'wmv',

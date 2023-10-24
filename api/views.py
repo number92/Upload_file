@@ -1,9 +1,11 @@
-from rest_framework import mixins, viewsets, status
-from rest_framework.response import Response
+from rest_framework import mixins, status, viewsets
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.response import Response
+
 from upload_file.models import File
 from upload_file.tasks import set_status_after_upload
-from .serializers import FileSerializer, FileListSerializer
+
+from .serializers import FileListSerializer, FileSerializer
 
 
 class UploadFileView(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -15,7 +17,6 @@ class UploadFileView(mixins.CreateModelMixin, viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             file = serializer.save()
-            print(file)
             set_status_after_upload.delay(file.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -25,8 +25,7 @@ class UploadFileView(mixins.CreateModelMixin, viewsets.GenericViewSet):
 class FileListView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = File.objects.all()
     serializer_class = FileListSerializer
-    parser_classes = (FormParser, MultiPartParser)
 
     def list(self, request, *args, **kwargs):
-        serializer = self.get_serializer(self.queryset, many=True)
-        return Response(serializer.data)
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

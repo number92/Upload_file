@@ -89,7 +89,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-redis_host = os.environ.get('REDIS_HOST', 'localhost')    
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
 # Channel layer definitions
 # http://channels.readthedocs.org/en/latest/deploying.html#setting-up-a-channel-backend
 
@@ -97,9 +97,12 @@ redis_host = os.environ.get('REDIS_HOST', 'localhost')
 REDIS_HOST = 'redis'
 REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+# CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_TIMEZONE = 'Europe/Moscow'
 CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 
 ALLOWED_FORMATS = [
